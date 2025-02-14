@@ -4,10 +4,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "animate.css";
 
 const Navbar = () => {
+
   const [quote, setQuote] = useState("");
   const [fade, setFade] = useState("animate__fadeIn");
   const [backgroundImage, setBackgroundImage] = useState("");
-
 
   useEffect(() => {
     const fetchQuote = async () => {
@@ -20,6 +20,7 @@ const Navbar = () => {
         const data = await response.json();
         const parsedData = JSON.parse(data.contents);
         
+        
         setFade("animate__fadeOut");
         setTimeout(() => {
           setQuote(`"${parsedData[0].q}" - ${parsedData[0].a}`);
@@ -30,36 +31,36 @@ const Navbar = () => {
       }
     };
 
-    fetchQuote();
-    const interval = setInterval(fetchQuote, 20000);
-    return () => clearInterval(interval);
+    fetchQuote(); 
+    const interval = setInterval(fetchQuote, 20000); 
+    return () => clearInterval(interval); 
   }, []);
 
 
   useEffect(() => {
     const fetchBackgroundImage = async () => {
       try {
-        const API_KEY = "fQBfuh7NfvNcrmG9Q2WhBUNwcmdxA3ZIwGuQrsYc";  
-        const response = await fetch(`https://api.nasa.gov/planetary/apod?count=1&api_key=${API_KEY}`);
+        const API_KEY = process.env.REACT_APP_NASA_API;
 
+        const response = await fetch(`https://api.nasa.gov/planetary/apod?count=1&api_key=${API_KEY}`);
 
         if (!response.ok) throw new Error("Failed to fetch NASA image");
         const data = await response.json();
-        
-        setBackgroundImage(data[0].hdurl || data[0].url); 
+       
+        setBackgroundImage(data[0].hdurl || data[0].url);
       } catch (err) {
         console.error("Error fetching NASA image:", err);
       }
     };
 
-    fetchBackgroundImage();
+    fetchBackgroundImage(); 
     const interval = setInterval(fetchBackgroundImage, 60000); 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); 
   }, []);
 
   return (
     <>
-      {}
+      {/* 📌 הגדרת תמונת הרקע של כל הדף */}
       <div style={{
         position: "fixed",
         top: 0,
@@ -73,6 +74,7 @@ const Navbar = () => {
         transition: "opacity 1s ease-in-out"
       }}></div>
 
+      {/* 📌 ניווט ראשי עם Bootstrap */}
       <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
         <div className="container">
           <Link className="navbar-brand" to="/">Task Manager</Link>
@@ -89,6 +91,7 @@ const Navbar = () => {
               </li>
             </ul>
           </div>
+          {/* 📌 הצגת הציטוט האנימטיבי */}
           <div className={`ms-3 text-white text-center animate__animated ${fade}`} style={{ maxWidth: "300px", fontSize: "0.9rem" }}>
             <span>💡 {quote || "Loading quote..."}</span>
           </div>
